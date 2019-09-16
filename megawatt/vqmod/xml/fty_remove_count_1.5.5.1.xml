@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>Remove category count (from both header and module category)</id>
+    <version>1</version>
+    <vqmver>2.3.0</vqmver>
+    <author>Andrei Bogdan (andrei.opencart@yahoo.com)</author>
+	<file name="catalog/controller/common/header.php">
+		<operation>
+			<search position="replace"><![CDATA[$this->load->model('catalog/product');]]></search>
+			<add><![CDATA[
+				
+			]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[$product_total = $this->model_catalog_product->getTotalProducts($data);]]></search>
+			<add><![CDATA[
+				$product_total = 0;
+			]]></add>
+		</operation>
+	</file>
+	<file name="catalog/controller/module/category.php">
+		<operation>
+			<search position="replace"><![CDATA[$this->load->model('catalog/product');]]></search>
+			<add><![CDATA[
+			]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[$total = $this->model_catalog_product->getTotalProducts(array('filter_category_id' => $category['category_id']));]]></search>
+			<add><![CDATA[
+				$total = 0;
+			]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[$product_total = $this->model_catalog_product->getTotalProducts($data);]]></search>
+			<add><![CDATA[
+				$product_total = 0;
+			]]></add>
+		</operation>
+	</file>
+</modification>
+	

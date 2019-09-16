@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>arbitrage v0.1</id>
+    <version>1.5.X</version>
+    <vqmver required="true">2.5.0</vqmver>
+    <author>GlobalSoft</author>
+
+    <file name="admin/controller/common/header.php">
+	<operation>
+	    <search position="after"><![CDATA[$this->data['text_review'] = $this->language->get('text_review');]]></search>
+	    <add><![CDATA[$this->data['text_buyinoneclick'] = $this->language->get('text_buyinoneclick');]]></add>
+	</operation>
+	<operation>
+	    <search position="after"><![CDATA[$this->data['review'] = $this->url->link('catalog/review', 'token=' . $this->session->data['token'], 'SSL');]]></search>
+	    <add><![CDATA[$this->data['buyinoneclick'] = $this->url->link('catalog/buyinoneclick', 'token=' . $this->session->data['token'], 'SSL');]]></add>
+	</operation>
+    </file>
+    <file name="admin/language/russian/common/header.php">
+	<operation>
+	    <search position="after" trim="true"><![CDATA[$_['text_review']                      = 'Отзывы';]]></search>
+	    <add><![CDATA[$_['text_buyinoneclick'] = 'Заказы';]]></add>
+	</operation>
+    </file>
+    <file name="admin/view/template/common/header.tpl">
+	<operation>
+	    <search position="after"><![CDATA[<li><a href="<?php echo $review; ?>"><?php echo $text_review; ?></a></li>]]></search>
+	    <add><![CDATA[<li><a href="<?php echo $buyinoneclick; ?>"><?php echo $text_buyinoneclick; ?></a></li>]]></add>
+	</operation>
+    </file>
+
+</modification>

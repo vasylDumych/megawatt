@@ -1,0 +1,42 @@
+User-agent: *
+
+Disallow: /admin/
+Disallow: /download/
+Disallow: /system/
+Disallow: /*search
+Disallow: /search/
+Disallow: /*limit=
+Disallow: /*filter=
+Disallow: /*path=
+Disallow: /*?route=
+Disallow: /*my-account
+Disallow: /*order-history
+Disallow: /*wishlist
+Disallow: /*newsletter
+Disallow: /*downloads
+Disallow: /*checkout
+Disallow: /*recurring
+Disallow: /*request-return
+Disallow: /*transactions
+Disallow: /*reward-points
+Disallow: /*forgot-password
+Disallow: /*address-book
+Disallow: /*affiliates
+Disallow: /*create-account
+Disallow: /*compare
+Disallow: /*account-simpleregister
+Disallow: /*login
+Disallow: /*simplecheckout
+Disallow: /*shopping-cart
+Disallow: /*change-password
+Disallow: /*simpleedit
+Disallow: /*?mfp=
+Disallow: /*sort=
+
+
+
+Host: https://s-energia.com.ua/
+
+Sitemap: https://s-energia.com.ua/sitemap.xml
+
+

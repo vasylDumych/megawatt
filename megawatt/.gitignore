@@ -1,0 +1,14 @@
+.idea
+image/data/**/*63.jpg
+system/cache/*
+system/logs/error.txt
+**/error_log
+*/logs/*.log
+error_log
+image/cache/**
+.vscode/
+01-09-2017.zip
+config.php
+admin/config.php
+generator/data/**
+vqmod/checked.cache

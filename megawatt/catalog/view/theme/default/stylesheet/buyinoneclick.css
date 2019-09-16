@@ -1,0 +1,21 @@
+.buyinoneclick {width:400px;}
+.buyinoneclick-title {
+	text-align:center;
+	font-size: 20px;
+	font-weight: bold;
+	padding-top: 10px;
+	text-align:center !important;
+}
+.buyinoneclick-label {  float: left; width: 111px;  font-weight:bold; text-align:right; padding:3px 10px 0 0;}
+.buyinoneclick input {float:left;}
+.buyinoneclick-img {width:30%;float:left;}
+.buyinoneclick-product {border-bottom:1px solid #C2C2C2;  margin-bottom: 20px;
+  padding: 15px;}
+.buyinoneclick-product, .buyinoneclick-form {width:100%;float:left;}
+.buyinoneclick-product .currency {float:left; width:auto;padding-top:3px;}
+.buyinoneclick-product .price_gs, .buyinoneclick-product .total_gs {float:left;padding:3px 5px 0 0;}
+.buyinoneclick-product input {width:20%;}
+.buyinoneclick-plabel {  float: left; margin-left: 5px; text-align:right; padding:3px 10px 0 0;}
+.buyinoneclick .buttons{
+	margin-bottom: 50px!important;
+}

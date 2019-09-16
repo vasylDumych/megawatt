@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+  <!-- @system: info -->
+  <id>VipSMS.net </id>
+  <version>1.5.1.3</version>
+  <vqmver>2.1.5</vqmver>
+  <author>VipSMS.net developers</author>
+
+  <!-- @system: init -->
+  <file name="system/engine/controller.php">
+    <operation>
+      <search position="before"><![CDATA[public function __construct($registry) {]]></search>
+      <add>
+        <![CDATA[
+          ## VipSMS.net [BEGIN]
+          protected function vipsms_net_init(){
+
+            # Load language
+            $this->load->language('module/vipsms_net');
+
+            $this->registry->set('vipsms_net_logger', new Log('vipsms_net.log'));
+
+            if ($this->config->get('vipsms_net_login') &&
+              $this->config->get('vipsms_net_password') &&
+              file_exists(DIR_SYSTEM . 'library/vipsms_net_gateway.php')){
+
+              # Load VipSMS.net library
+              require_once(DIR_SYSTEM . 'library/vipsms_net_gateway.php');
+
+              $gateway = new VipSMSNetGateway(
+                $this->config->get('vipsms_net_login'),
+                $this->config->get('vipsms_net_password')
+              );
+
+              # Create registry object
+              if (!$gateway->getErrors()){
+
+                # Set sign
+                $vipsms_net_sign = $this->config->get('vipsms_net_sign');
+                $gateway->setSign($vipsms_net_sign);
+
+                # Add to global registry
+                $this->registry->set('vipsms_net_gateway', $gateway);
+                return true;
+
+              }else{
+
+                # Notify administrator
+                if ($this->config->has('vipsms_net_events_admin_gateway_connection_error')) {
+                  $mail = new Mail();
+
+                  $mail->protocol  = $this->config->get('config_mail_protocol');
+                  $mail->parameter = $this->config->get('config_mail_parameter');
+                  $mail->hostname  = $this->config->get('config_smtp_host');
+                  $mail->username  = $this->config->get('config_smtp_username');
+                  $mail->password  = $this->config->get('config_smtp_password');
+                  $mail->port      = $this->config->get('config_smtp_port');
+                  $mail->timeout   = $this->config->get('config_smtp_timeout');
+
+                  $mail->setTo($this->config->get('config_email'));
+                  $mail->setFrom($this->config->get('config_email'));
+                  $mail->setSender($this->config->get('config_name'));
+                  $mail->setSubject('VipSMS.net connection error');
+                  $mail->setText(sprintf($this->language->get('vipsms_net_message_connection_error'),
+                    date('d.m.Y H:i:s'),
+                    $gateway->getErrors())
+                  );
+                  $mail->send();
+                }
+
+                return false;
+              }
+            }
+          }
+          ## VipSMS.net [END]
+        ]]>
+      </add>
+    </operation>
+  </file>
+
+  <!-- @system: models -->
+  <file name="admin/model/sale/order.php">
+    <operation>
+      <search position="before"><![CDATA[public function getTotalOrderHistoriesByOrderStatusId($order_status_id) {]]></search>
+      <add>
+        <![CDATA[
+            ## VipSMS.net [BEGIN]
+
+            public function getStatusNameForVipSms($order_status_id) {
+              $query = $this->db->query("SELECT name FROM ".DB_PREFIX."order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1");
+
+              return $query->row['name'];
+            }
+            ## VipSMS.net [END]
+        ]]>
+      </add>
+    </operation>
+  </file>
+
+  <!-- @admin: received new message -->
+  <file name="catalog/controller/information/contact.php">
+    <operation>
+      <search position="before"><![CDATA[$this->redirect($this->url->link('information/contact/success'));]]></search>
+      <add>
+        <![CDATA[
+            ## VipSMS.net [BEGIN]
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_admin_new_email')) {
+
+              $message = $this->language->get('vipsms_net_message_admin_new_email');
+
+              $phones = array($this->config->get('vipsms_net_admphone'));
+              if (strlen($this->config->get('vipsms_net_admphone1'))) $phones[] = $this->config->get('vipsms_net_admphone1');
+
+              $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_admin_new_email. Dest phone:'
+                .implode(', ', $phones)
+                ." Message: ".$message
+              );
+
+              foreach($phones as $phone)
+                $this->vipsms_net_gateway->sendSms($phone, $message);
+            }
+            ## VipSMS.net [END]
+        ]]>
+      </add>
+    </operation>
+  </file>
+
+  <!-- @admin: new member is registered & @customer: congratulations [quickorder]-->
+  <file name="catalog/controller/account/quickregister.php">
+    <operation>
+      <search position="before"><![CDATA[$this->redirect($this->url->link('account/success'));]]></search>
+      <add>
+        <![CDATA[
+            ## VipSMS.net [BEGIN]
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_admin_new_customer')) {
+
+              $message = $this->language->get('vipsms_net_message_admin_new_customer');
+
+              $phones = array($this->config->get('vipsms_net_admphone'));
+              if (strlen($this->config->get('vipsms_net_admphone1'))) $phones[] = $this->config->get('vipsms_net_admphone1');
+
+              $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_admin_new_customer. Dest phone:'
+                .implode(', ', $phones)
+                ." Message: ".$message
+              );
+
+              foreach($phones as $phone)
+                $this->vipsms_net_gateway->sendSms($phone, $message);
+            }
+
+            ## VipSMS.net [END]
+        ]]>
+      </add>
+    </operation>
+  </file>
+
+  <!-- @admin: new member is registered & @customer: congratulations -->
+  <file name="catalog/controller/account/register.php">
+    <operation>
+      <search position="before"><![CDATA[$this->redirect($this->url->link('account/success'));]]></search>
+      <add>
+        <![CDATA[
+            ## VipSMS.net [BEGIN]
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_admin_new_customer')) {
+
+              $message = $this->language->get('vipsms_net_message_admin_new_customer');
+
+              $phones = array($this->config->get('vipsms_net_admphone'));
+              if (strlen($this->config->get('vipsms_net_admphone1'))) $phones[] = $this->config->get('vipsms_net_admphone1');
+
+              $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_admin_new_customer. Dest phone:'
+                .implode(', ', $phones)
+                ." Message: ".$message
+              );
+
+              foreach($phones as $phone)
+                $this->vipsms_net_gateway->sendSms($phone, $message);
+            }
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_customer_new_register')) {
+
+              $message = sprintf(
+                $this->language->get('vipsms_net_message_customer_new_register'),
+                $this->config->get('config_name')
+              );
+
+              $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_customer_new_register. Dest phone: '
+                .$this->request->post['telephone']
+                ." Message: ".$message
+              );
+
+              $this->vipsms_net_gateway->sendSms($this->request->post['telephone'], $message);
+            }
+            ## VipSMS.net [END]
+        ]]>
+      </add>
+    </operation>
+  </file>
+  <file name="catalog/controller/checkout/register.php">
+    <operation>
+      <search position="after"><![CDATA[$this->model_account_customer->addCustomer($this->request->post);]]></search>
+      <add>
+        <![CDATA[
+            ## VipSMS.net [BEGIN]
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_admin_new_customer')) {
+
+              $message = $this->language->get('vipsms_net_message_admin_new_customer');
+
+              $phones = array($this->config->get('vipsms_net_admphone'));
+              if (strlen($this->config->get('vipsms_net_admphone1'))) $phones[] = $this->config->get('vipsms_net_admphone1');
+
+              $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_admin_new_customer. Dest phone: '
+                .implode(', ', $phones)
+                ." Message: ".$message
+              );
+
+              foreach($phones as $phone)
+                $this->vipsms_net_gateway->sendSms($phone, $message);
+            }
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_customer_new_register')) {
+
+              $message = sprintf(
+                $this->language->get('vipsms_net_message_customer_new_register'),
+                $this->config->get('config_name')
+              );
+
+              $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_admin_new_customer. Dest phone: '
+                .$this->request->post['telephone']
+                ." Message: ".$message
+              );
+
+              $this->vipsms_net_gateway->sendSms($this->request->post['telephone'], $message);
+            }
+            ## VipSMS.net [END]
+        ]]>
+      </add>
+    </operation>
+  </file>
+
+  <!-- @admin: new order is available -->
+  <file name="catalog/controller/checkout/success.php">
+    <operation>
+      <search position="after"><![CDATA[if (isset($this->session->data['order_id'])) {]]></search>
+      <add>
+        <![CDATA[
+            ## VipSMS.net [BEGIN]
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_admin_new_order')) {
+
+              $message = $this->language->get('vipsms_net_message_admin_new_order');
+
+              $phones = array($this->config->get('vipsms_net_admphone'));
+              if (strlen($this->config->get('vipsms_net_admphone1'))) $phones[] = $this->config->get('vipsms_net_admphone1');
+
+              $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_admin_new_order. Dest phone:'
+                .implode(', ', $phones)
+                ." Message: ".$message
+              );
+
+              foreach($phones as $phone)
+                $this->vipsms_net_gateway->sendSms($phone, $message);
+            }
+            if ($this->config->get('vipsms_net_events_customer_new_order')){
+              $this->load->model('checkout/order');
+              $last_order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+	if ($_COOKIE["language"] == "ru") {
+		$message = sprintf(
+		$this->config->get('vipsms_net_textordersmsru'),
+		$this->session->data['order_id']
+		);
+	} elseif ($_COOKIE["language"] == "ua-uk") {
+		$message = sprintf(
+		$this->config->get('vipsms_net_textordersmsua'),
+		$this->session->data['order_id']
+		);
+	} else {
+		$message = sprintf(
+		$this->config->get('vipsms_net_textordersmsru'),
+		$this->session->data['order_id']
+		);
+	}
+
+              $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_customer_new_order. Dest phone:'
+                .$last_order['telephone']
+                ." Message: ".$message
+              );
+
+              $this->vipsms_net_gateway->sendSms($last_order['telephone'], $message);
+            }
+            ## VipSMS.net [END]
+        ]]>
+      </add>
+    </operation>
+  </file>
+
+  <!-- @customer: new order status is available -->
+  <file name="admin/controller/sale/order.php">
+    <operation>
+      <search position="before"><![CDATA[$this->model_sale_order->editOrder($this->request->get['order_id'], $this->request->post);]]></search>
+      <add>
+        <![CDATA[
+            ## VipSMS.net [BEGIN]
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_customer_new_order_status')) {
+              $last_order = $this->model_sale_order->getOrder($this->request->get['order_id']);
+
+              if ($last_order['order_status_id'] != $this->request->post['order_status_id']) {
+
+                $message = sprintf(
+                  $this->language->get('vipsms_net_message_customer_new_order_status'),
+                  $this->request->get['order_id'],
+                  $this->model_sale_order->getStatusNameForVipSms($this->request->post['order_status_id'])
+                );
+
+                $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_customer_new_order_status. Dest phone:'
+                  .$last_order['telephone']
+                  ." Message: ".$message
+                );
+
+                $this->vipsms_net_gateway->sendSms($last_order['telephone'], $message);
+              }
+            }
+            ## VipSMS.net [END]
+        ]]>
+      </add>
+    </operation>
+    <operation>
+      <search position="before"><![CDATA[$this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);]]></search>
+      <add>
+        <![CDATA[
+            ## VipSMS.net [BEGIN]
+
+            if ($this->vipsms_net_init()==true && $this->config->get('vipsms_net_events_customer_new_order_status') && $this->request->post['notify']){
+
+              $last_order = $this->model_sale_order->getOrder($this->request->get['order_id']);
+
+              if ($last_order['order_status_id'] != $this->request->post['order_status_id']) {
+
+                $message = sprintf(
+                  $this->language->get('vipsms_net_message_customer_new_order_status'),
+                  $this->request->get['order_id'],
+                  $this->model_sale_order->getStatusNameForVipSms($this->request->post['order_status_id'])
+                );
+
+                $this->vipsms_net_logger->write('['.substr(__FILE__, strlen(DIR_SYSTEM)-1).'] Event: vipsms_net_events_customer_new_order_status. Dest phone:'
+                  .$last_order['telephone']
+                  ." Message: ".$message
+                );
+
+                $this->vipsms_net_gateway->sendSms($last_order['telephone'], $message);
+              }
+            }
+           ## VipSMS.net [END]
+          ]]>
+      </add>
+    </operation>
+  </file>
+</modification>
+<!-- vi:ts=2:sw=2:ai:et
+-->

@@ -1,0 +1,73 @@
+<modification>
+
+    <id>Cache category data to speed up page load for store with many categories and sub categories.</id>
+    <version>1.0.1</version>
+    <vqmver>2.3.2</vqmver>
+    <author>Weismann Web - www.weismannweb.com</author>
+
+    <file name="catalog/controller/module/category.php">
+        <operation>
+            <search position="after"><![CDATA[
+            foreach ($categories as $category) {
+            ]]></search>
+            <add><![CDATA[
+						$category_data = $this->cache->get('vqmod_category_data_controller_module_category'.$this->config->get('config_store_id'));
+	
+		    if ($category_data) {
+		        $this->data['categories'] = $category_data;
+			    break;
+		    }
+            ]]></add>
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/category.tpl')) {
+            ]]></search>
+            <add><![CDATA[
+            if (!$category_data) {
+			$this->cache->set('vqmod_category_data_controller_module_category'.$this->config->get('config_store_id'), $this->data['categories']);
+			}
+            ]]></add>
+        </operation>
+    </file>
+
+ <file name="catalog/controller/common/header.php">
+        <operation>
+            <search position="after"><![CDATA[
+            foreach ($categories as $category) {
+            ]]></search>
+            <add><![CDATA[
+            $category_data = $this->cache->get('vqmod_category_data_controller_common_header'.$this->config->get('config_store_id'));
+	
+		    if ($category_data) {
+		        $this->data['categories'] = $category_data;
+			    break;
+		    }
+            ]]></add>
+        </operation>
+        <operation>
+            <search position="before"><![CDATA[
+            $this->children = array(
+            ]]></search>
+            <add><![CDATA[
+            if (!$category_data) {
+			$this->cache->set('vqmod_category_data_controller_common_header'.$this->config->get('config_store_id'), $this->data['categories']);
+			}
+            ]]></add>
+        </operation>
+    </file>
+
+ 
+</modification>
+
+<!--
+<modification>  - This is the highest level of the file and there can only be one
+<id>            - This is the name of the mod. Format: Free form text. (Informational)
+<version>       - This is the version of the mod. Format: Number and Decimal (1.0.0) (Informational)
+<author>        - This is the author of the mod. Format: Free form text (Informational)
+<file>          - This is the name of the file to modify. Requires attribute "name" as relative filename (catalog/controller/product/product.php). There can be multiple
+<operation>     - This is the wrapper of the actual operation occuring. There can be multiple operations to the same file.
+<search>        - This is the first required step of the operation. Uses an optional attribute "position" set to before|after|replace. replace is default. One per operation. Use CDATA tags to wrap code.
+<add>           - This is the second required step of the operation. Uses an optional attribute "trim" set to true|false to trim away whitespace and linebreaks. false is default. One per operation. Location of added data depends on the position of the <search> command. Use CDATA tags to wrap code.
+<![CDATA[  ]]>  - These are called CDATA tags and they are used by xml to specify that the data between should not be evaluated.
+-->

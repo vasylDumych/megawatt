@@ -1,0 +1,81 @@
+//26.09.2017
+catalog\view\theme\marketshop\template\product\category.tpl
+catalog\view\theme\marketshop\stylesheet\stylesheet.css
+catalog\view\theme\marketshop\template\common\footer.tpl
+catalog\view\theme\default\template\module\subscribe.tpl
+config.php
+admin\config.php
+
+//30.10.2017
+catalog/controller/product/category.php
+catalog/language/ukrainian/product/category.php
+catalog/language/russian/product/category.php
+catalog/controller/product/product.php
+catalog/language/ukrainian/product/product.php
+catalog/language/russian/product/product.php
+catalog/controller/product/manufacturer.php
+catalog/language/ukrainian/product/manufacturer.php
+catalog/language/russian/product/manufacturer.php
+
+//07.12.2017
+catalog/view/theme/marketshop/template/product/product.tpl
+catalog/controller/product/product.php
+catalog/language/english/product/product.php
+catalog/language/russian/product/product.php
+catalog/language/ukrainian/product/product.php
+catalog/model/catalog/product.php
+
+//27.03.2018 (Nemchenko Vadym)
+catalog/view/theme/marketshop/stylesheet/stylesheet.css
+catalog/view/theme/marketshop/template/product/product.tpl
+catalog/controller/product/product.php
+catalog/language/ukrainian/product/product.php
+catalog/language/russian/product/product.php
+catalog/language/ukrainian/ukrainian.php
+catalog/language/russian/russian.php
+
+//29.03.2018 (Nemchenko Vadym)
+catalog/view/theme/marketshop/stylesheet/stylesheet.css
+catalog/view/theme/marketshop/template/product/category.tpl
+catalog/view/theme/marketshop/template/product/manufacturer_info.tpl
+catalog/view/theme/marketshop/template/product/product.tpl
+catalog/view/theme/marketshop/template/product/search.tpl
+
+//30.03.2018 (Nemchenko Vadym)
+catalog/view/theme/marketshop/stylesheet/stylesheet.css
+
+//07.03.2018 (Nemchenko Vadym)
+.htaccess
+catalog/controller/common/seo_pro.php
+catalog/controller/common/seo_url.php
+catalog/controller/product/manufacturer.php
+catalog/view/theme/default/template/module/supermenu.tpl
+catalog/view/theme/marketshop/stylesheet/stylesheet.css
+catalog/view/theme/marketshop/template/common/header.tpl
+catalog/view/theme/marketshop/template/product/category.tpl
+catalog/view/theme/marketshop/template/product/manufacturer_info.tpl
+
+//13.04.2018 (Nemchenko Vadym)
+catalog/controller/feed/yandex_market.php
+catalog/controller/module/product_tab.php
+catalog/controller/product/category.php
+catalog/controller/product/product.php
+catalog/language/russian/product/product.php
+catalog/language/ukrainian/product/product.php
+catalog/model/export/yandex_market.php
+catalog/view/theme/marketshop/js/custom.js
+catalog/view/theme/marketshop/stylesheet/stylesheet.css
+catalog/view/theme/marketshop/template/common/header.tpl
+catalog/view/theme/marketshop/template/module/product_tab.tpl
+catalog/view/theme/marketshop/template/product/category.tpl
+catalog/view/theme/marketshop/template/product/product.tpl
+
+//29.04.2018 (Nemchenko Vadym)
+admin/model/tool/export_import.php
+
+//07.05.2018 (Nemchenko Vadym)
+catalog/view/theme/default/template/module/youwatched_default.tpl
+catalog/view/theme/marketshop/stylesheet/stylesheet.css
+catalog/view/theme/marketshop/template/module/product_tab.tpl
+catalog/view/theme/marketshop/template/product/category.tpl
+catalog/view/theme/marketshop/template/product/product.tpl

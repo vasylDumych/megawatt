@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+        <id>Sms and ttn for rderpro</id>
+        <version>1.0</version>
+        <vqmver>2.0</vqmver>
+        <author>eleo</author>	
+        <author>eleo</author>	
+        <file name="admin/model/sale/orderpro.php">
+				<operation>
+					<search position="replace"><![CDATA[
+'telephone' => $order_query->row['telephone'],'fax'  => $order_query->row['fax']
+						]]></search>
+						<add><![CDATA[
+'telephone' => $order_query->row['telephone'],'fax'  => $order_query->row['fax'],'ttn'  => $order_query->row['ttn']
+						]]>
+					</add>
+				</operation>
+				<operation>
+					<search position="replace"><![CDATA[
+telephone = '" . $this->db->escape($data['telephone']) . "',
+						]]></search>
+						<add><![CDATA[
+telephone = '" . $this->db->escape($data['telephone']) . "', ttn = '" . $this->db->escape($data['ttn']) . "',
+						]]>
+					</add>
+				</operation>
+		</file>
+        <file name="admin/controller/sale/order.php">
+				<operation>
+					<search position="before"><![CDATA[
+		if (isset($this->request->post['customer_group_id'])) {
+						]]></search>
+						<add><![CDATA[
+		if (isset($this->request->post['sms'])) {
+			$this->data['sms'] = $this->request->post['sms'];
+		} elseif (!empty($order_info)) {
+			$this->data['sms'] = $order_info['sms'];
+		} else {
+			$this->data['sms'] = '';
+		}
+						]]>
+					</add>
+				</operation>
+				<operation>
+					<search position="before"><![CDATA[
+  	protected function getList() {
+						]]></search>
+						<add><![CDATA[
+	public function sms() {
+		$this->data['error'] = '';
+		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+			if (!$this->user->hasPermission('modify', 'sale/order')) { 
+				$this->data['error'] = $this->language->get('error_permission');
+			}
+			if (!$this->data['error']) { 
+			header ('Content-type: text/html; charset=utf-8'); 
+			
+			$login  = 's-energia';
+			$passwd = 'tdes123';
+			
+			$client = new SoapClient ('http://vipsms.net/api/soap.html');
+			$res = $client->auth($login, $passwd);						 
+			$sessid = $res->message;			 			
+		    $abs_phone = $_POST['telephone'];
+			$abs_phone = str_replace("-","",$abs_phone);
+			$abs_phone = str_replace("(","",$abs_phone);
+			$abs_phone = str_replace(")","",$abs_phone);
+			$abs_phone = str_replace("+","",$abs_phone);
+			$abs_phone = str_replace(" ","",$abs_phone);
+			$nn3 = substr($abs_phone,strlen($abs_phone)-2,2);
+			$abs_phone = substr($abs_phone,0,strlen($abs_phone)-2);
+			$nn2 = substr($abs_phone,strlen($abs_phone)-2,2);
+			$abs_phone = substr($abs_phone,0,strlen($abs_phone)-2);
+			$nn1 = substr($abs_phone,strlen($abs_phone)-3,3);
+			$abs_phone = substr($abs_phone,0,strlen($abs_phone)-3);
+			$operator = substr($abs_phone,strlen($abs_phone)-3,3);
+			$abs_phone = substr($abs_phone,0,strlen($abs_phone)-3);
+			$number="(".$operator.") ".$nn1."-".$nn2."-".$nn3;
+			if (strlen($abs_phone)>1)
+			{
+				$number="+".$abs_phone." ".$number;
+			}
+			else
+			{
+				$number="+38 ".$number;
+			}
+			
+			$res = $client->sendSmsOne($sessid, $number, $login, $_POST['text']);
+			$this->load->model('sale/order');
+			$this->model_sale_order->saveSms($this->request->get['order_id'], $_POST['text']);
+			}
+		}
+		
+	}
+						]]>
+					</add>
+				</operation>
+		</file>
+        <file name="admin/controller/sale/orderpro.php">
+				<operation>
+					<search position="before" index="2"><![CDATA[
+		if (isset($this->request->post['customer_id'])) {
+						]]></search>
+						<add><![CDATA[
+		if (isset($this->request->post['ttn'])) {
+			$this->data['ttn'] = $this->request->post['ttn'];
+		} elseif (isset($order_info)) { 
+			$this->data['ttn'] = $order_info['ttn'];
+		} else {
+			$this->data['ttn'] = '';
+		}
+
+						]]>
+					</add>
+				</operation>
+				<operation>
+					<search position="before"><![CDATA[
+  	protected function getList() {
+						]]></search>
+						<add><![CDATA[
+	public function sms() {
+		$this->data['error'] = '';
+		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
+			if (!$this->user->hasPermission('modify', 'sale/order')) { 
+				$this->data['error'] = $this->language->get('error_permission');
+			}
+			if (!$this->data['error']) { 
+			header ('Content-type: text/html; charset=utf-8'); 
+			
+			$login  = 's-energia';
+			$passwd = 'tdes123';
+			
+			$client = new SoapClient ('http://vipsms.net/api/soap.html');
+			$res = $client->auth($login, $passwd);						 
+			$sessid = $res->message;			 			
+		    $abs_phone = $_POST['telephone'];
+			$abs_phone = str_replace("-","",$abs_phone);
+			$abs_phone = str_replace("(","",$abs_phone);
+			$abs_phone = str_replace(")","",$abs_phone);
+			$abs_phone = str_replace("+","",$abs_phone);
+			$abs_phone = str_replace(" ","",$abs_phone);
+			$nn3 = substr($abs_phone,strlen($abs_phone)-2,2);
+			$abs_phone = substr($abs_phone,0,strlen($abs_phone)-2);
+			$nn2 = substr($abs_phone,strlen($abs_phone)-2,2);
+			$abs_phone = substr($abs_phone,0,strlen($abs_phone)-2);
+			$nn1 = substr($abs_phone,strlen($abs_phone)-3,3);
+			$abs_phone = substr($abs_phone,0,strlen($abs_phone)-3);
+			$operator = substr($abs_phone,strlen($abs_phone)-3,3);
+			$abs_phone = substr($abs_phone,0,strlen($abs_phone)-3);
+			$number="(".$operator.") ".$nn1."-".$nn2."-".$nn3;
+			if (strlen($abs_phone)>1)
+			{
+				$number="+".$abs_phone." ".$number;
+			}
+			else
+			{
+				$number="+38 ".$number;
+			}
+			
+			$res = $client->sendSmsOne($sessid, $number, $login, $_POST['text']);
+			$this->load->model('sale/order');
+			$this->model_sale_order->saveSms($this->request->get['order_id'], $_POST['text']);
+			}
+		}
+		
+	}
+						]]>
+					</add>
+				</operation>
+		</file>
+        <file name="admin/view/template/sale/orderpro.tpl">
+				<operation>
+					<search position="before"><![CDATA[
+$('input[name=\'firstname\']').blur(function() {
+						]]></search>
+						<add><![CDATA[
+$('#button-sms').click(function(e) {
+	$.ajax({
+		url: 'index.php?route=sale/order/sms&token=<?php echo $token; ?>&order_id=<?php echo $_GET["order_id"]; ?>',
+		type: 'post',
+		dataType: 'html',
+		data: 'telephone=<?php echo $telephone; ?>&text=' + encodeURIComponent($('input[id=\'sms_customer\']').val()),
+		success: function(html) {			
+			alert('SMS успешно отправлено!');
+		}
+	});
+});
+$('#button-sms2').click(function(e) {
+	$.ajax({
+		url: 'index.php?route=sale/order/sms&token=<?php echo $token; ?>&order_id=<?php echo $_GET["order_id"]; ?>',
+		type: 'post',
+		dataType: 'html',
+		data: 'telephone=<?php echo $telephone; ?>&text=' + encodeURIComponent($('input[id=\'sms_customer2\']').val()),
+		success: function(html) {			
+			alert('SMS успешно отправлено!');
+		}
+	});
+});
+						]]>
+					</add>
+				</operation>
+				<operation>
+					<search position="after"><![CDATA[
+										<div class="paramdata"><input type="text" name="telephone" value="<?php echo $telephone; ?>" /></div>
+						]]></search>
+						<add><![CDATA[
+						</div>
+									<div class="width60" style="width: 300px;border: 1px solid grey;margin-left: 10px;">
+										<div class="paramname">ТТН</div>
+										<div class="paramdata"><input type="text" name="ttn" id="sms_customer" value="<?php echo $ttn; ?>" /></div>
+										<br>
+										<a id="button-sms" class="button">Отправить смс c ТТН-кой</a>
+									</div>
+									<div class="width60" style="width: 540px;border: 1px solid grey;margin-left: 10px;">
+										<div class="paramname">Шаблоны СМС</div>
+										<div class="paramdata" style="float: left;"><input style="width: 410px;" type="text" name="sms_customer2" id="sms_customer2" value="" /></div>
+										<a id="button-sms2" class="button">Отправить смс</a>
+										<br>
+										<a style="border-radius: 5px 5px 5px 5px;border: 0px;color: #FFF;display: inline-block;padding: 3px 3px 3px 3px;background: grey; cursor: pointer;text-decoration: none;margin: 3px;" type="submit" onclick="document.getElementById('sms_customer2').value+='<?php echo $shablon1; ?>'; return false;" /><?php echo $nameshablon1; ?></a>
+										
+										<a style="border-radius: 5px 5px 5px 5px;border: 0px;color: #FFF;display: inline-block;padding: 3px 3px 3px 3px;background: grey; cursor: pointer;text-decoration: none;margin: 3px;" type="submit" onclick="document.getElementById('sms_customer2').value+='<?php echo $shablon2; ?>'; return false;" /><?php echo $nameshablon2; ?></a>
+										
+										<a style="border-radius: 5px 5px 5px 5px;border: 0px;color: #FFF;display: inline-block;padding: 3px 3px 3px 3px;background: grey; cursor: pointer;text-decoration: none;margin: 3px;" type="submit" onclick="document.getElementById('sms_customer2').value+='<?php echo $shablon3; ?>'; return false;" /><?php echo $nameshablon3; ?></a>
+										
+										<a style="border-radius: 5px 5px 5px 5px;border: 0px;color: #FFF;display: inline-block;padding: 3px 3px 3px 3px;background: grey; cursor: pointer;text-decoration: none;margin: 3px;" type="submit" onclick="document.getElementById('sms_customer2').value+='<?php echo $shablon4; ?>'; return false;" /><?php echo $nameshablon4; ?></a>
+										
+										<a style="border-radius: 5px 5px 5px 5px;border: 0px;color: #FFF;display: inline-block;padding: 3px 3px 3px 3px;background: grey; cursor: pointer;text-decoration: none;margin: 3px;" type="submit" onclick="document.getElementById('sms_customer2').value+='<?php echo $shablon5; ?>'; return false;" /><?php echo $nameshablon5; ?></a>
+						]]>
+					</add>
+				</operation>
+		</file>
+
+</modification>

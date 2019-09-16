@@ -1,0 +1,28 @@
+<modification>
+	<id>File Manager Shortcut - DO NOT REMOVE</id>
+	<version>1.0.0</version>
+	<vqmver>2.5.1</vqmver>
+	<author>villagedefrance</author>
+	<file name="admin/controller/common/header.php">
+		<operation error="abort">
+			<search position="before"><![CDATA[$this->data['text_error_log']]]></search>
+			<add><![CDATA[		$this->data['text_filemanager_full'] = $this->language->get('text_filemanager_full');]]></add>
+		</operation>
+		<operation error="abort">
+			<search position="before"><![CDATA[$this->data['error_log']]]></search>
+			<add><![CDATA[			$this->data['filemanager_full'] = $this->url->link('common/filemanager_full', 'token=' . $this->session->data['token'], 'SSL');]]></add>
+		</operation>
+	</file>
+	<file name="admin/language/*/common/header.php">
+		<operation error="abort">
+			<search position="before"><![CDATA[$_['text_error_log']]]></search>
+			<add><![CDATA[$_['text_filemanager_full']               = 'File Manager';]]></add>
+		</operation>
+	</file>
+	<file name="admin/view/template/common/header.tpl">
+		<operation error="abort">
+			<search position="after"><![CDATA[<a href="<?php echo $error_log; ?>"><?php echo $text_error_log; ?></a>]]></search>
+			<add><![CDATA[          <li><a href="<?php echo $filemanager_full; ?>"><?php echo $text_filemanager_full; ?></a></li>]]></add>
+		</operation>
+	</file>
+</modification>

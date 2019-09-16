@@ -1,0 +1,261 @@
+<!--
+/**
+ * LICENSE
+ *
+ * This source file is subject to the GNU General Public License, Version 3
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/copyleft/gpl.html
+ *
+ * @category   OpenCart
+ * @package    Module Caching PRO for OpenCart
+ * @copyright  Copyright (c) 2016 Eugene Lifescale (eugene.lifescale@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License, Version 3
+ */
+ -->
+<modification>
+    <id>Module Caching PRO</id>
+    <version>1.0.1</version>
+    <vqmver>1.0.8</vqmver>
+    <author>Eugene Lifescale</author>
+    <file name="system/engine/controller.php">
+        <!-- add new methods: begin -->
+        <operation>
+            <search position="before"><![CDATA[protected function getChild($child, $args = array()) {]]></search>
+            <add><![CDATA[
+                private function _getCachedChild($id, $driver, $timeout) {
+
+                    $module_caching_pro_drivers = $this->_prepareCacheDriver($driver);
+
+                    switch ($driver) {
+
+                        case 'disk':
+
+                            $cache_path = DIR_CACHE . 'module_caching_pro' . DIRECTORY_SEPARATOR . $id;
+
+                            if (file_exists($cache_path) && is_readable($cache_path)) {
+
+                                $filectime = (int) filectime($cache_path);
+                                $time      = (int) time();
+
+                                if ($timeout < $time - $filectime) {
+
+                                    if (!unlink($cache_path)) {
+                                        trigger_error('Error: Could not remove Cache file!');
+                                    }
+
+                                    return false;
+                                } else {
+
+                                    return file_get_contents($cache_path);
+                                }
+                            }
+
+                            return false;
+
+                            break;
+
+                        case 'memcache':
+
+                            if (class_exists('Memcache')) {
+                                $memcache = new Memcache();
+                                if (
+                                $memcache->connect(
+                                    $module_caching_pro_drivers[$driver]['host'],
+                                    $module_caching_pro_drivers[$driver]['port']
+                                )
+                                ) {
+                                    return $memcache->get($module_caching_pro_drivers[$driver]['namespace'] . $id);
+                                } else {
+
+                                    trigger_error('Error: Could not connect to Memcache server!');
+
+                                    return false;
+                                }
+                            }
+
+                            trigger_error('Error: Memcache Class does not exist!');
+
+                            return false;
+
+                            break;
+
+                        case 'memcached':
+
+                            if (class_exists('Memcached')) {
+                                $memcached = new Memcached();
+                                if (
+                                $memcached->addServer(
+                                    $module_caching_pro_drivers[$driver]['host'],
+                                    $module_caching_pro_drivers[$driver]['port']
+                                )
+                                ) {
+                                    return $memcached->get($module_caching_pro_drivers[$driver]['namespace'] . $id);
+                                } else {
+
+                                    trigger_error('Error: Could not connect to Memcached server!');
+
+                                    return false;
+                                }
+                            }
+
+                            trigger_error('Error: Memcached Class does not exist!');
+
+                            return false;
+
+                            break;
+
+                        default:
+
+                            trigger_error('Error: Unknown cache driver!');
+
+                            return false;
+                    }
+                }
+
+                private function _setCachedChild($id, $data, $driver, $timeout) {
+
+                    $module_caching_pro_drivers = $this->_prepareCacheDriver($driver);
+
+                    switch ($driver) {
+
+                        case 'disk':
+
+                            $cache_directory = DIR_CACHE . 'module_caching_pro' . DIRECTORY_SEPARATOR;
+                            $cache_path = DIR_CACHE . 'module_caching_pro' . DIRECTORY_SEPARATOR . $id;
+
+                            if (!file_exists($cache_directory)) {
+                                if (!mkdir($cache_directory)) {
+                                    trigger_error('Error: Cache directory is not writable!');
+                                }
+                            }
+
+                            $handle = fopen($cache_path, 'w');
+
+                            fwrite($handle, $data);
+                            fclose($handle);
+
+                            break;
+
+                        case 'memcache':
+
+                            if (class_exists('Memcache')) {
+                                $memcache = new Memcache();
+                                if (
+                                $memcache->connect(
+                                    $module_caching_pro_drivers[$driver]['host'],
+                                    $module_caching_pro_drivers[$driver]['port']
+                                )
+                                ) {
+                                    $memcache->set($module_caching_pro_drivers[$driver]['namespace'] . $id, $data, false, $timeout);
+                                }
+                            } else {
+                                trigger_error('Error: Memcache Class does not exist!');
+                            }
+                            break;
+
+                        case 'memcached':
+
+                            if (class_exists('Memcached')) {
+                                $memcached = new Memcached();
+                                if (
+                                $memcached->addServer(
+                                    $module_caching_pro_drivers[$driver]['host'],
+                                    $module_caching_pro_drivers[$driver]['port']
+                                )
+                                ) {
+                                    $memcached->get($module_caching_pro_drivers[$driver]['namespace'] . $id, $data, $timeout);
+                                }
+                            } else {
+                                trigger_error('Error: Memcached Class does not exist!');
+                            }
+                            break;
+
+                        default:
+                            trigger_error('Error: Unknown cache driver!');
+                    }
+                }
+
+                private function _prepareCacheDriver($driver) {
+
+                    $module_caching_pro_drivers = $this->config->get('module_caching_pro_drivers');
+
+                    if (!isset($module_caching_pro_drivers[$driver]['host'])) {
+
+                        $module_caching_pro_drivers[$driver]['host'] = '';
+
+                        trigger_error(sprintf('Error: %s host is required!', $driver));
+                    }
+
+                    if ($driver != 'disk' && !isset($module_caching_pro_drivers[$driver]['port'])) {
+
+                        $module_caching_pro_drivers[$driver]['port'] = '';
+
+                        trigger_error(sprintf('Error: %s port is required!', $driver));
+                    }
+
+                    if ($driver != 'disk' && !isset($module_caching_pro_drivers[$driver]['namespace'])) {
+
+                        $module_caching_pro_drivers[$driver]['namespace'] = '';
+
+                        trigger_error(sprintf('Error: %s namespace is required!', $driver));
+                    }
+
+                    return $module_caching_pro_drivers;
+                }
+
+            ]]></add>
+        </operation>
+        <!-- add new methods: end -->
+        <!-- getChild patch: begin -->
+        <operation>
+            <search position="after"><![CDATA[
+                protected function getChild($child, $args = array()) {
+            ]]></search>
+            <add><![CDATA[
+                $cache = [];
+
+                $module_caching_pro_modules = $this->config->get('module_caching_pro_modules');
+
+                if ($module_caching_pro_modules) {
+
+                    foreach ($module_caching_pro_modules as $module_caching_pro_module) {
+
+                        if ($child == $module_caching_pro_module['route'] && $module_caching_pro_module['status']) {
+
+                            $cache = array(
+                                'id'      => md5($child . serialize(array_merge( $args,
+                                        (isset($module_caching_pro_module['get']) ? $_GET : []),
+                                        (isset($module_caching_pro_module['post']) ? $_POST : []),
+                                        (isset($module_caching_pro_module['files']) ? $_FILES : []),
+                                        (isset($module_caching_pro_module['cookie']) ? $_COOKIE : []),
+                                        (isset($module_caching_pro_module['session']) ? $_SESSION : [])))
+                                ),
+                                'driver'  => $module_caching_pro_module['driver'],
+                                'timeout' => $module_caching_pro_module['timeout'],
+                            );
+
+                            break;
+                        }
+                    }
+                }
+
+                if ($cache && $data = $this->_getCachedChild($cache['id'], $cache['driver'], $cache['timeout'])) {
+
+                    return $data;
+
+                }
+            ]]></add>
+        </operation>
+        <operation>
+            <search position="after"><![CDATA[
+                $controller->{$action->getMethod()}($action->getArgs());
+            ]]></search>
+            <add><![CDATA[
+                if ($cache) {
+                    $this->_setCachedChild($cache['id'], $controller->output, $cache['driver'], $cache['timeout']);
+                }
+            ]]></add>
+        </operation>
+        <!-- getChild patch: end -->
+    </file>
+</modification>

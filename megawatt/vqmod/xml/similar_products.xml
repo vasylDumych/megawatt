@@ -1,0 +1,128 @@
+<modification>
+	<id>Similar products</id>
+	<version>1.1</version>
+	<vqmver>2.1.5</vqmver>
+	<author>made by zubovd</author>
+	<file name="catalog/controller/product/product.php">
+		<operation>
+			<search position="before">
+				<![CDATA[
+					$this->data['products'] = array();
+				]]>
+			</search>
+			<add>
+				<![CDATA[
+// product similar
+			$this->data['products_similar'] = array();
+
+			$similar = $this->model_catalog_product->getProductSimilar($this->request->get['product_id'],5);
+
+			foreach ($similar as $result) {
+				if ($result['image']) {
+					$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_related_width'), $this->config->get('config_image_related_height'));
+				} else {
+					$image = false;
+				}
+
+				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+				} else {
+					$price = false;
+				}
+
+				if ((float)$result['special']) {
+					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+				} else {
+					$special = false;
+				}
+
+				if ($this->config->get('config_review_status')) {
+					$rating = (int)$result['rating'];
+				} else {
+					$rating = false;
+				}
+
+				$this->data['products_similar'][] = array(
+					'product_id' => $result['product_id'],
+					'thumb'   	 => $image,
+					'name'    	 => $result['name'],
+					'price'   	 => $price,
+					'special' 	 => $special,
+					'rating'     => $rating,
+					'reviews'    => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
+					'href'    	 => $this->url->link('product/product', 'product_id=' . $result['product_id']),
+				);
+			}
+// product similar
+				]]>
+			</add>
+		</operation>
+		<operation>
+			<search position="after">
+				<![CDATA[
+					$this->data['tab_attribute'] = $this->language->get('tab_attribute');
+				]]>
+			</search>
+			<add>
+				<![CDATA[
+	$this->data['tab_similar'] = $this->language->get('tab_similar');
+				]]>
+			</add>
+		</operation>
+	</file>
+	<file name="catalog/language/russian/product/product.php">
+        <operation>
+            <search position="after"><![CDATA[
+            $_['tab_attribute']     = 'Характеристики';
+            ]]></search>
+            <add><![CDATA[
+			$_['tab_similar']		= 'Аналоги';
+            ]]></add>
+        </operation>
+	</file>
+	<file name="catalog/language/ukrainian/product/product.php">
+        <operation>
+            <search position="after"><![CDATA[
+            $_['tab_attribute'] = 'Специфікація'; #45824
+            ]]></search>
+            <add><![CDATA[
+			$_['tab_similar']		= 'Аналоги';
+            ]]></add>
+        </operation>
+	</file>
+
+	<file name="catalog/model/catalog/product.php">
+        <operation>
+            <search position="before"><![CDATA[
+	public function getProductLayoutId($product_id) {
+            ]]></search>
+            <add><![CDATA[
+// product similar
+	public function getProductSimilar($product_id,$limit) {
+		$product_data = array();
+		// находим категорию, в которой нах. товар
+		$category = $this->db->query("SELECT category_id FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" .$product_id. "'");
+		$category_id = $category->row['category_id'];
+		// делаем выборку товаров из этой же категории, которые следуют после данного товара
+		$query = $this->db->query("SELECT p.product_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_category p2c  ON (p.product_id = p2c.product_id) WHERE p2c.category_id = '" . (int)$category_id . "' AND p.status = '1' AND p.date_available <= NOW() AND p.product_id > '" .(int)$product_id. "' ORDER BY p.product_id ASC LIMIT " .(int)$limit);
+
+		foreach ($query->rows as $result) {
+			$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+		}
+
+		if(count($query->rows) < $limit){ // если в категории после товара меньше лимита...
+			$plimit = $limit - count($query->rows); // вычисляем разницу и делаем выборку товаров с НАЧАЛА списка, кол-во = разнице
+			$sql = $this->db->query("SELECT p.product_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_category p2c  ON (p.product_id = p2c.product_id) WHERE p2c.category_id = '" . (int)$category_id . "' AND p.status = '1' AND p.date_available <= NOW() AND p.product_id <> '" .(int)$product_id. "' ORDER BY p.product_id ASC LIMIT " .(int)$plimit);
+
+				foreach ($sql->rows as $result) {
+					$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+				}
+		}
+
+		return $product_data;
+	}
+// product similar
+            ]]></add>
+        </operation>
+	</file>
+</modification>

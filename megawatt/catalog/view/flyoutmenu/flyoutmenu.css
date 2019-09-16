@@ -1,0 +1,649 @@
+@-webkit-keyframes fadeInS {
+    from { opacity: 0.1; }
+      to { opacity: 1; }
+}
+@-moz-keyframes fadeInS {
+    from { opacity: 0.1; }
+      to { opacity: 1; }
+}
+@keyframes fadeInS {
+    from { opacity: 0.1; }
+      to { opacity: 1; }
+}
+@-webkit-keyframes SlideRight {
+    from { left: 115%; opacity: 0.7; }
+      to { left: 100%; opacity: 1; }
+}
+@-moz-keyframes SlideRight {
+    from { left: 115%; opacity: 0.7; }
+      to { left: 100%; opacity: 1; }
+}
+@keyframes SlideRight {
+    from { left: 115%; opacity: 0.7; }
+      to { left: 100%; opacity: 1; }
+}
+@-webkit-keyframes SlideLeft {
+    from { right: 115%; opacity: 0.7; }
+      to { right: 100%; opacity: 1; }
+}
+@-moz-keyframes SlideLeft {
+    from { right: 115%; opacity: 0.7; }
+      to { right: 100%; opacity: 1; }
+}
+@keyframes SlideLeft {
+    from { right: 115%; opacity: 0.7; }
+      to { right: 100%; opacity: 1; }
+}
+.flyoutmenu, .flyoutmenu * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.flyoutmenu {
+	background-color: #363636;
+	background-image: linear-gradient(to bottom, #444444, #222222);
+	background-repeat: repeat-x;
+	margin-bottom: 15px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-khtml-border-radius: 2px;
+	border-radius: 2px;
+	padding: 0px;
+	line-height: 20px;
+    border: 1px solid #333;
+}
+.flyoutmenu img { max-width: 100%; }
+.flyoutmenu a { cursor: pointer; font-size: 12px; }
+.flyoutmenu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+    position: relative;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-khtml-border-radius: 2px;
+	border-radius: 2px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-top: -1px;
+    margin-bottom: -1px;
+}
+.flyoutmenu ul li.tlli {
+	display: block;
+	z-index: 20;
+	padding: 0px;
+	font-size: 12px;
+}
+.flyoutmenu.relat_pos ul li.tlli {
+	position: relative;
+}
+.flyoutmenu ul li.tlli:hover {
+	z-index: 10000;
+}
+.flyoutmenu ul li a.tll {
+	font-size: 14px;
+	color: #fff;
+	line-height: 14px;
+	text-decoration: none;
+	display: block;
+	padding: 13px 10px 13px 10px;
+	z-index: 5;
+	position: relative;
+    -webkit-transition: 0.4s ease;
+    -moz-transition: 0.4s ease;
+    -o-transition: 0.4s ease;
+    transition: 0.4s ease;
+}
+.flyoutmenu ul li.tlli + li.tlli a.tll {
+	border-top: 1px solid #555;
+}
+.flyoutmenu ul li.tlli:hover a.tll {
+	background: #fff;
+	color: #444;
+	z-index: 9998;
+	/*border-color: transparent !important;*/
+}
+.flyoutmenu ul li.menu-title span.tll {
+	font-size: 14px;
+	color: #ddd;
+	line-height: 16px;
+	text-decoration: none;
+	display: block;
+	padding: 14px 10px 14px 10px;
+	z-index: 26; 
+	border-bottom: 1px solid #555;
+}
+.flyoutmenu ul li div.bigdiv {
+	display: none;
+	background: #fff;
+	position: absolute;
+	left: 100%;
+	margin-left: -1px;
+    top:0px;
+	z-index: 6;
+	padding: 5px;
+	width: 800px;
+	border: 1px solid #ddd;
+    min-height: 100%;
+	-webkit-box-shadow: 0px 0px 4px #ccc;
+	-moz-box-shadow: 0px 0px 4px #ccc;
+	box-shadow: 0px 0px 4px #ccc;
+}
+/*.flyoutmenu.relat_pos ul li div.bigdiv { margin-left: -1px; }*/
+.flyoutmenu ul li.tlli:hover div.bigdiv { z-index: 9990; }
+.flyoutmenu ul li div.bigdiv.ef-fade-in, .flyoutmenu ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright.ef-fade-in {
+	display: block !important;
+	-webkit-animation: fadeInS 0.6s;
+    animation: fadeInS 0.6s;
+}
+.flyoutmenu ul li div.bigdiv.ef-slide-right, .flyoutmenu ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright.ef-slide-right  {
+	display: block !important;
+	-webkit-animation: SlideRight 0.5s;
+    animation: SlideRight 0.5s;
+}
+.flyoutmenu ul li div.bigdiv.withflyout {
+   padding: 0px;
+   padding-top: 5px;
+   padding-bottom: 5px;
+   width: 200px;
+}
+.flyoutmenu ul li div.bigdiv.withflyout.andlogin { padding: 5px; }
+.flyoutmenu ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright{
+   display: none;
+   position: absolute;
+   background: #fff;
+   padding: 0px;
+   z-index: 99;
+   top: 0px;
+   left: 100%;
+   min-height: 100%;
+	-webkit-box-shadow: 0px 0px 4px #ccc;
+	-moz-box-shadow: 0px 0px 4px #ccc;
+	box-shadow: 0px 0px 4px #ccc;
+   z-index: -1;
+}
+.flyoutmenu ul li div.bigdiv p { margin-bottom: 7px; }
+.flyoutmenu ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright .inflyouttoright{
+   padding: 10px;
+   width: 769px;   
+}
+.flyoutmenu  ul  li  div.bigdiv.withflyout  .withimage {
+   width: 135px;
+}
+.flyoutmenu   .withchildfo {
+    display: block;
+	vertical-align: top;
+	border-bottom: 1px solid #ececec;
+}
+.flyoutmenu   .withchildfo.hasflyout {
+	padding-right: 20px;
+	background-image: url('mkidr.png');
+	background-position: right center;
+	background-repeat: no-repeat;
+}
+.flyoutmenu .withchildfo a.theparent {
+    color: #777;
+	display: block;
+	padding: 5px;
+	padding-top: 9px;
+	padding-bottom: 9px;
+	text-decoration: none;
+}
+.flyoutmenu .withchildfo:hover {
+    background-color: #fff;
+}
+.flyoutmenu ul li.tlli.act div.bigdiv {
+	display: table;
+}
+.flyoutmenu > ul > li > div > ul {
+	display: table-cell;
+}
+.flyoutmenu > ul > li ul + ul {
+	padding-left: 20px;
+}
+.flyoutmenu  ul  li  div  .withchild ul.child-level li a {
+	text-decoration: none;
+	padding-top: 4px;
+	padding-left: 7px;
+	padding-bottom: 5px;
+	color: #444;
+	display: block;
+	min-width: 120px;
+	background: url('slist.png') left center no-repeat;
+}
+.flyoutmenu  ul  li  div  .withchild ul.child-level li a:hover {
+	text-decoration: underline;
+}
+.flyoutmenu  ul  li  div .flyoutmenu-left {
+	display: block;
+	vertical-align: top;
+}
+.flyoutmenu  ul  li  div .menu-add {
+    width: 200px;
+	margin-right: 5px;
+	height: 100%;
+	overflow: hidden;
+	float: right;
+	vertical-align: bottom;
+	display: inline-block;
+	margin-top: 10px;
+	position: relative;
+}
+.flyoutmenu  ul  li  div .menu-add img {
+    float: right;
+	max-width: 100%;
+} 
+.flyoutmenu  ul  li  div  .withchild {
+    display: inline-block;
+	width: 173px;
+	margin-left: 10px;
+	margin-top: 10px;
+	vertical-align: top;
+}
+.flyoutmenu  ul  li  div  .withchild a.theparent {
+    color: #777;
+	border-bottom: 1px solid #eee;
+	display: block;
+	padding: 5px;
+	text-decoration: none;
+}
+.flyoutmenu  ul  li  div  .withchild a.theparent:hover {
+    color: #000;
+}
+.flyoutmenu  ul  li  div .withimage {
+    display: inline-block;
+	vertical-align: top;
+	margin-left: 10px;
+	width: 145px;
+	margin-top: 10px;
+}
+.flyoutmenu  ul  li  div .withimage .image img {
+	background: #fff;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #ececec;
+}
+.flyoutmenu  ul  li  div .withimage .name a {
+    color: #777;
+	font-size: 12px;
+	text-decoration: none;
+}
+.flyoutmenu  ul  li  div .withimage .dropprice {
+    color: #55B12B;
+}
+.flyoutmenu  ul  li  div .withimage .dropprice span {
+    color: #f00;
+	text-decoration: line-through;
+}
+.flyoutmenu  ul  li  div .withimage .child-level a {
+    text-decoration: none;
+	color: #333;
+	font-weight: normal;
+	font-size: 12px;
+}
+.flyoutmenu  ul  li  div .withimage .child-level {
+    margin-left: 5px;
+}
+.flyoutmenu  ul  li  div .withimage .name a:hover {
+    text-decoration: underline;
+}
+.flyoutmenu .mainexpand {
+    display: none;
+}
+.flyoutmenu  ul  li  div .dropbrands {
+    width: 150px;
+	margin-right: 10px;
+	float: right;
+	vertical-align: top;
+	display: inline-block;
+	margin-top: 10px;
+}
+.flyoutmenu  ul  li  div .dropbrands span {
+	display: block;
+	padding: 5px;
+	border-bottom: 1px solid #ccc;
+	color: #777;
+}
+.flyoutmenu  ul  li  div .dropbrands ul li a {
+    padding: 5px;
+	padding-left: 7px;
+	text-decoration: none;
+	color: #555;
+	display: block;
+}
+.flyoutmenu ul li div.bigdiv .linkoftopitem {
+	display: block;
+	clear: both;
+	padding-top: 12px;
+}
+.flyoutmenu ul li div.bigdiv.withflyout .linkoftopitem {
+}
+.flyoutmenu ul li div.bigdiv .linkoftopitem a {
+    color: #777;
+	text-decoration: none;
+	padding: 6px;
+	text-align: center;
+	border: 1px solid #ccc;
+	display: block;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-khtml-border-radius: 2px;
+	border-radius: 2px;
+	font-size: 12px;
+	background-color: #eeeeee;
+	background-image: linear-gradient(to bottom, #fff, #e9e9e9);
+	background-repeat: repeat-x;
+}
+.flyoutmenu ul li div.bigdiv .linkoftopitem a:hover {
+    background-color: #fff;
+	background-image: linear-gradient(to bottom, #e9e9e9, #fff);
+	background-repeat: repeat-x;
+}
+.flyoutmenu ul li div.bigdiv .headingoftopitem {
+	display: block;
+	clear: both;
+	margin-bottom: 8px;
+	border-bottom: 1px solid #e9e9e9;
+}
+.flyoutmenu ul li div.bigdiv .addingaspace {
+	display: block;
+	clear: both;
+	margin-bottom: 7px;
+}
+.flyoutmenu ul li div.bigdiv.withflyout .headingoftopitem {
+    margin-left: 5px;
+	margin-right: 5px;
+}
+.flyoutmenu ul li div.bigdiv .headingoftopitem h2 {
+    font-size: 18px;
+	display: block;
+	margin: 0px;
+	padding: 5px;
+	padding-left: 10px;
+	border: none;
+	background: none;
+	font-weight: normal;
+}
+.flyoutmenu ul li div.bigdiv .headingoftopitem h2 a {
+   font-size: 18px !important;
+   display: block;
+   margin: 0px;
+   padding: 0px;
+   border: 0px;
+   background: none;
+   font-weight: normal;
+}
+.flyoutmenu ul li div.bigdiv.withflyout .headingoftopitem h2, .flyoutmenu ul li div.bigdiv.withflyout .headingoftopitem h2 a {
+   font-size: 14px;
+}
+.flyoutmenu ul li div.bigdiv.withflyout .headingoftopitem h2 {
+   padding-left: 5px;
+}
+.flyoutmenu form{
+	padding-top: 5px;
+}
+.flyoutmenu input[type='text'], .flyoutmenu input[type='password'] {
+	padding: 5px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	width: 100%;
+	color: #888;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-khtml-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #e7e7e7;
+}
+.flyoutmenu a.mobile-trigger, .flyoutmenu a.mobile-trigger:hover {
+    display: none;
+}
+.flyoutmenu.respmedium ul li div .menu-add {
+	width: 180px !important;
+}
+.flyoutmenu.respmedium ul li div .menu-add img {
+	width: 100%;
+	height: auto;
+}
+.flyoutmenu.respmedium ul li div .menu-add + .flyoutmenu-left, .flyoutmenu.respmedium ul li div .menu-add + .dropbrands + .flyoutmenu-left {
+	margin-right: 190px !important;
+}
+.flyoutmenu.respmedium ul li div .dropbrands {
+	width: 180px !important;
+	clear: right;
+	margin-right: 0px;
+	margin-left: 5px;
+	margin-top: 10px;
+}
+/*.flyoutmenu.respsmall {
+  display: none;
+}*/
+
+.flyoutmenu.respsmall a.mobile-trigger {
+	font-size: 14px;
+	color: #fff;
+	font-weight: normal;
+	line-height: 16px;
+	text-decoration: none;
+	display: block;
+	padding: 16px 10px 16px 10px;
+	z-index: 6;
+	position: relative;
+	text-shadow: 0 0 1px #111;
+	background: url('mkid.png') 100% center no-repeat;
+}
+.flyoutmenu.respsmall > ul {
+	visibility: hidden;
+	height: 0px;
+	-webkit-transition: 0.3s ease-in;
+    -moz-transition: 0.3s ease-in;
+    -o-transition: 0.3s ease-in;
+    transition: 0.3s ease-in;
+	overflow: hidden;
+}
+.flyoutmenu.respsmall > ul.exped {
+	visibility:visible;
+	height: auto;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.flyoutmenu.respsmall ul li.tlli.hometlli { display: none; }
+.flyoutmenu.respsmall ul li.tlli {
+	position: relative;
+	display: block;
+	z-index: 20;
+	padding-left: 1px;
+	font-size: 12px;
+}
+.flyoutmenu.respsmall ul li.tlli.sep { 
+	border-top: 1px solid #5A5A5A;
+	height: 0px;
+}
+.flyoutmenu.respsmall ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright {
+	position: relative;
+	z-index: 1;
+	left: auto !important;
+	right: auto !important;
+	top: auto;
+	-webkit-box-shadow: 0px 0px 0px #ccc;
+	-moz-box-shadow: 0px 0px 0px #ccc;
+	box-shadow: 0px 0px 0px #ccc;
+}
+.flyoutmenu.respsmall ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright .inflyouttoright {
+	width: 100% !important;
+}
+.flyoutmenu.respsmall ul li div .flyoutmenu-left { margin: 0px !important; }
+.flyoutmenu.respsmall ul li div .flyoutmenu-left:before, .flyoutmenu.respsmall ul li div .flyoutmenu-left:after, 
+.flyoutmenu.respsmall ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright:before, .flyoutmenu.respsmall ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright:after
+{ clear: both; content: " "; display: table; }
+.flyoutmenu.respsmall ul li div .menu-add { display: none; }
+.flyoutmenu.respsmall ul li div .dropbrands { display: none; }
+.flyoutmenu .menu-add-mobil, .flyoutmenu .dropbrands.dropbrands-mobil { display: none; }
+.flyoutmenu.respsmall .menu-add-mobil, .flyoutmenu.respsmall .dropbrands-mobil { display: block; }
+.flyoutmenu.respsmall .menu-add-mobil { text-align: center; margin-top: 10px;}
+.flyoutmenu.respsmall .menu-add-mobil img { max-width: 100% !important;}
+.flyoutmenu.respsmall .dropbrands.dropbrands-mobil { display: block; float: none; width: auto; margin-right: 0px;}
+.flyoutmenu.respsmall ul li div .withchild, .flyoutmenu.respsmall ul li div .withimage {
+	display: inline-block;
+	width: 49% !important;
+	padding-left: 0px;
+	padding-right: 0px;
+	margin: 0px !important;
+	margin-bottom: 0px;
+	clear: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	*display: inline;
+}
+.flyoutmenu.respsmall ul li div .withimage .image img { width: 50px; height: auto; float: left; margin-right: 10px;}
+.flyoutmenu.respsmall .withchildfo a.theparent { padding-top: 14px; padding-bottom: 14px; }
+.flyoutmenu .superdropper { display: none; }
+.flyoutmenu.respsmall .superdropper { 
+	display: block;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	text-decoration: none;
+	z-index: 27;
+	padding-left: 40px;
+	padding-bottom: 3px;
+}
+.flyoutmenu.respsmall ul li.tlli:hover a.superdropper {
+    z-index: 9999;
+}
+.flyoutmenu.respsmall .superdropper span {
+	font-size: 20px;
+	text-decoration: none;
+	padding: 5px 10px;
+	background: #fff;
+	color: #000;
+	display: block;
+	margin-right: 5px;
+	margin-top: 6px;
+	width: 30px; 
+	text-align: center;
+	border-radius: 2px;
+}
+.flyoutmenu.respsmall .superdropper span + span { display: none; }
+.flyoutmenu.respsmall ul li.tlli.exped .superdropper span { display: none; }
+.flyoutmenu.respsmall ul li.tlli.exped .superdropper span + span { display: block; }
+.flyoutmenu.respsmall ul li div.bigdiv {
+	position: relative;
+	margin: 0px !important;
+	width: 100% !important;
+	display: block;
+	display: none;
+    left: auto !important;
+	right: auto !important;
+}
+.flyoutmenu.respsmall ul li.exped div.bigdiv {
+	display: block !important;
+	-webkit-animation: fadeInS 0.3s;
+    animation: fadeInS 0.3s;
+}
+.flyoutmenu.respsmall .withchildfo { position: relative; }
+.flyoutmenu.respsmall .withchildfo.hasflyout { background-image: none; }
+.flyoutmenu.respsmall .withchildfo.hasflyout.exped .flyouttoright {
+	display: block !important;
+	-webkit-animation: fadeInS 0.3s;
+    animation: fadeInS 0.3s;
+}
+.flyoutmenu.respsmall .withchildfo.hasflyout .superdropper span,
+.flyoutmenu.respsmall .withchildfo.hasflyout.exped .superdropper span + span { display: block !important; }
+.flyoutmenu.respsmall .withchildfo.hasflyout .superdropper span + span,
+.flyoutmenu.respsmall .withchildfo.hasflyout.exped .superdropper span { display: none !important; }
+.flyoutmenu.respsmall ul li div.bigdiv .addingaspace { display: none !important; }
+.flyoutmenu.respsmall ul li div .withchild, .flyoutmenu.respsmall ul li div .withimage { width: 100% !important; float: none !important; }
+.flyoutmenu.respsmall ul li.menu-title { display: none; }
+.flyoutmenu.respsmall.ontheright.fly_rtl a.mobile-trigger { background-position: left center; }
+.flyoutmenu.respsmall ul li.mkids a.tll { background-image: none !important; }
+.flyoutmenu.respsmall.ontheright.fly_rtl .superdropper { right: auto; left: 5px; padding-left: 0px; padding-right: 30px; }
+.flyoutmenu.respsmall.ontheright.fly_rtl ul li div .withimage .image img { float: right; margin-right: 0px; margin-left: 10px; }
+.flyoutmenu.respsmall .withchildfo { background: none !important; }
+.flyoutmenu.respsmall .withchildfo.hasflyout { padding: 0px !important; }
+/*theme 1*/
+.flyoutmenu.fly_theme_1 { background-color: #fff; background-image: none; border: 1px solid #eee; }
+.flyoutmenu.fly_theme_1.respsmall { background-color: #ddd; }
+.flyoutmenu.fly_theme_1.respsmall a.mobile-trigger { color: #333; }
+.flyoutmenu.fly_theme_1 ul li.menu-title span.tll, .flyoutmenu.fly_theme_1 ul li.tlli + li.tlli a.tll { border-color: #eee; }
+.flyoutmenu.fly_theme_1 ul li.menu-title span.tll { color: #333; }
+.flyoutmenu.fly_theme_1 ul li a.tll { color: #888; }
+/*theme 2*/
+.flyoutmenu.fly_theme_2 { background-color: #eee; background-image: linear-gradient(to bottom, #f9f9f9, #e9e9e9); border: 1px solid #eee;
+}
+.flyoutmenu.fly_theme_2.respsmall a.mobile-trigger { color: #333; }
+.flyoutmenu.fly_theme_2 ul li.menu-title span.tll, .flyoutmenu.fly_theme_2 ul li.tlli + li.tlli a.tll { border-color: #eee; }
+.flyoutmenu.fly_theme_2 ul li.menu-title span.tll { color: #333; }
+.flyoutmenu.fly_theme_2 ul li a.tll { color: #888; background: #fff; }
+.flyoutmenu.fly_theme_2 ul li:hover a.tll { background: #444; color: #fff; }
+.flyoutmenu.fly_theme_2 ul li div.bigdiv { border: 1px solid #444; background: #444; color: #fff;}
+.flyoutmenu.fly_theme_2 ul li div.bigdiv a { color: #fff; }
+.flyoutmenu.fly_theme_2 ul li.tlli + li.tlli:hover a.tll { border-color: #444; }
+.flyoutmenu.fly_theme_2 ul li div .withchild ul.child-level li a { background: none; color: #fff; }
+.flyoutmenu.fly_theme_2 ul li div .withchild a.theparent, .flyoutmenu.fly_theme_2 .withchildfo { color: #ddd; border-bottom: 1px solid #666; }
+.flyoutmenu.fly_theme_2 ul li div .withchild a.theparent:hover { color: #999; }
+.flyoutmenu.fly_theme_2 .withchildfo:hover, .flyoutmenu.fly_theme_2 ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright { background: #555; }
+.flyoutmenu.fly_theme_2 ul li div.bigdiv .linkoftopitem a { border: 1px solid #999; background-color: #222; background-image: linear-gradient(to bottom, #222, #333); background-repeat: repeat-x; }
+.flyoutmenu.fly_theme_2 ul li div.bigdiv .linkoftopitem a:hover { background-color: #333; background-image: linear-gradient(to bottom, #333, #222); background-repeat: repeat-x; }
+.flyoutmenu.fly_theme_2 ul li div .withimage .dropprice span { color: #F23C3C; }
+.flyoutmenu.fly_theme_2 ul li div .withimage .dropprice { color: #A1EA80; font-weight: bold; }
+/*theme 3*/
+.flyoutmenu.fly_theme_3 { background-color: #fff; background-image: none; border: 1px solid #eee;
+}
+.flyoutmenu.fly_theme_3 ul li.menu-title span.tll, .flyoutmenu.fly_theme_3 ul li.tlli + li.tlli a.tll { border-color: #eee; }
+.flyoutmenu.fly_theme_3 ul li.menu-title span.tll { color: #CC3518; }
+.flyoutmenu.fly_theme_3 ul li a.tll, .flyoutmenu.fly_theme_3 .withchildfo a.theparent { color: #7DB215; }
+.flyoutmenu.fly_theme_3 ul li:hover a.tll, .flyoutmenu.fly_theme_3 .withchildfo:hover, .flyoutmenu.fly_theme_3 .withchildfo:hover a.theparent { background-color: #7DB215; color: #fff; }
+.flyoutmenu.fly_theme_3 ul li div .withchild a.theparent, .flyoutmenu.fly_theme_3 ul li div .withimage .name a, .flyoutmenu.fly_theme_3 ul li div .dropbrands span { color: #B2361E; }
+.flyoutmenu.fly_theme_3 ul li div .withchild ul.child-level li a, .flyoutmenu.fly_theme_3 ul li div .withimage .child-level a, .flyoutmenu.fly_theme_3 ul li div .dropbrands ul li a { color: #CC3518; }
+/*theme 4*/
+.flyoutmenu.fly_theme_4 { background-color: #5ACD33; background-image: linear-gradient(to bottom, #5ACD33, #4BA72C); border: 1px solid #4BA72C; }
+.flyoutmenu.fly_theme_4 ul li.menu-title span.tll { color: #306E1B; }
+.flyoutmenu.fly_theme_4 ul li a.tll { color: #fff; }
+.flyoutmenu.fly_theme_4 ul li.menu-title span.tll, .flyoutmenu.fly_theme_4 ul li.tlli a.tll { border-bottom: 1px solid #7ADB59; }
+.flyoutmenu.fly_theme_4 ul li.tlli a.tll, .flyoutmenu.fly_theme_4 ul li.tlli + li.tlli a.tll { border-top: 1px solid #327604; }
+.flyoutmenu.fly_theme_4 ul li.tlli:last-child a.tll { border-bottom: none; }
+/*theme 5*/
+.flyoutmenu.fly_theme_5 { background-color: #DA5216; background-image: linear-gradient(to bottom, #DA5216, #C74C16); border: 1px solid #C74C16; }
+.flyoutmenu.fly_theme_5 ul li.menu-title span.tll { color: #61260C; }
+.flyoutmenu.fly_theme_5 ul li a.tll { color: #fff; }
+.flyoutmenu.fly_theme_5 ul li.menu-title span.tll, .flyoutmenu.fly_theme_5 ul li.tlli a.tll { border-bottom: 1px solid #F56324; }
+.flyoutmenu.fly_theme_5 ul li.tlli a.tll, .flyoutmenu.fly_theme_5 ul li.tlli + li.tlli a.tll { border-top: 1px solid #895919; }
+.flyoutmenu.fly_theme_5 ul li.tlli:last-child a.tll { border-bottom: none; }
+/*default mods*/
+.flyoutmenu ul li.mkids a.tll { background-image: url('mkidr.png'); background-position: right center; background-repeat: no-repeat; }
+.flyoutmenu.fly_default ul li.menu-title span.tll, .flyoutmenu.fly_default ul li.tlli a.tll { border-bottom: 1px solid #555; }
+.flyoutmenu.fly_default ul li.tlli a.tll, .flyoutmenu.fly_default ul li.tlli + li.tlli a.tll { border-top: 1px solid #111; }
+.flyoutmenu.fly_default ul li.tlli:last-child a.tll { border-bottom: none; }
+/*right column settings*/
+.flyoutmenu.ontheright ul li div.bigdiv {
+	right: 100%;
+	left: auto;
+	margin-right: -1px;
+}
+.flyoutmenu.ontheright ul li div.bigdiv.ef-slide-right, .flyoutmenu.ontheright ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright.ef-slide-right  {
+	display: block !important;
+	-webkit-animation: SlideLeft 0.5s;
+    animation: SlideLeft 0.5s;
+}
+.flyoutmenu.ontheright ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright {
+	right: 100%;
+	left: auto; 
+}
+.flyoutmenu.ontheright ul li.mkids a.tll { background-image: url('mkidrr.png'); background-position: left center; background-repeat: no-repeat; padding-left: 15px; padding-right: 5px; }
+.flyoutmenu.ontheright .withchildfo.hasflyout { padding-right: 0px; background-image: url('mkidrr.png'); background-position: left center; background-repeat: no-repeat; }
+.flyoutmenu.ontheright .withchildfo { padding-left: 17px; }
+.flyoutmenu.ontheright ul li div .menu-add { float: left; margin-left: 0px; margin-right: 5px; }
+.flyoutmenu.ontheright ul li div .dropbrands { margin-right: 0px; margin-left: 10px;  float: left; }
+.flyoutmenu.ontheright ul li div .flyoutmenu-left { text-align: right; }
+.flyoutmenu.ontheright ul li.lad div .flyoutmenu-left { text-align: left; }
+.flyoutmenu.ontheright ul li div .flyoutmenu-left > div { text-align: left; }
+.flyoutmenu.ontheright ul li div .withchild, .flyoutmenu.ontheright ul li div .withimage { margin-left: 0px; margin-right: 10px; }
+.flyoutmenu.ontheright ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright .inflyouttoright { text-align: right; }
+.flyoutmenu.ontheright ul li div.bigdiv.withflyout > .withchildfo > .flyouttoright .inflyouttoright > div { text-align: left; }
+.flyoutmenu.ontheright.fly_rtl, .flyoutmenu.ontheright.fly_rtl * { text-align: right; }
+.flyoutmenu.ontheright.fly_rtl ul li.mkids a.tll { padding-left: 10px; padding-right: 10px; }
+.flyoutmenu.ontheright.fly_rtl ul li.lad div .flyoutmenu-left { text-align: right; }
+.flyoutmenu.ontheright.fly_rtl ul li div .flyoutmenu-left > div { text-align: left; }

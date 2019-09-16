@@ -1,0 +1,235 @@
+<modification>
+	<id>catalog title and H1 homepage h1 and keywords</id>
+	<version>1.1</version>
+	<vqmver>2.1.7</vqmver>
+	<author>vlkombat - http://httpmaster.ru</author>
+<!--admin-->
+
+
+	<file path="admin/view/template/catalog/" name="category_form.tpl,category_enhanced_form.tpl">
+		<operation>
+		    <search position="before"><![CDATA[<td><?php echo $entry_description; ?></td>]]></search>
+		    <add><![CDATA[
+			 <td>Title (тайтл)</td>
+                 <td><input type="text" name="category_description[<?php echo $language['language_id']; ?>][seo_title]" size="100" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['seo_title'] : ''; ?>" />
+                  <?php if (isset($error_name[$language['language_id']])) { ?>
+                  <span class="error"><?php echo $error_name[$language['language_id']]; ?></span>
+                  <?php } ?></td></tr><tr>
+                  <td>H1</td>
+                 <td><input type="text" name="category_description[<?php echo $language['language_id']; ?>][seo_h1]" size="100" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['seo_h1'] : ''; ?>" />
+                  <?php if (isset($error_name[$language['language_id']])) { ?>
+                  <span class="error"><?php echo $error_name[$language['language_id']]; ?></span>
+                  <?php } ?></td>
+              </tr>
+              <tr>
+		    ]]></add>
+		</operation>
+	</file>
+
+	<file name="admin/controller/catalog/category.php">
+		<operation>
+		    <search position="after"><![CDATA[
+		    	protected function getForm() {
+		    ]]></search>
+		    <add><![CDATA[
+			$query = $this->db->query("DESC ".DB_PREFIX."category_description seo_title");
+if (!$query->num_rows) {
+$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` ADD `seo_title` varchar(255) NOT NULL COMMENT '' COLLATE utf8_bin AFTER name;");
+$this->db->query("ALTER TABLE `" . DB_PREFIX . "category_description` ADD `seo_h1` varchar(255) NOT NULL COMMENT '' COLLATE utf8_bin AFTER seo_title;");
+
+}]]></add>
+		</operation>
+		
+	</file>
+
+
+	<file name="admin/model/catalog/category.php">
+		<operation>
+		    <search position="replace"><![CDATA[$this->db->escape($value['meta_description']) . "',]]></search>
+		    <add><![CDATA[$this->db->escape($value['meta_description']) . "', seo_title = '" . $this->db->escape($value['seo_title']) . "', seo_h1 = '" . $this->db->escape($value['seo_h1']) . "',]]></add>
+		</operation>
+	
+		<operation>
+		    <search position="after"><![CDATA[$category_description_data[$result['language_id']] = array(]]></search>
+		    <add><![CDATA[
+			'seo_title' => $result['seo_title'],
+			'seo_h1' => $result['seo_h1'],
+		    ]]></add>
+		</operation>		
+	</file>
+<!--catalog-->
+	<file name="/catalog/controller/product/category.php">
+	
+
+		<operation>
+		 <search position="replace"><![CDATA[$this->document->setTitle($category_info['name']);]]></search>
+		    <add trim="true"><![CDATA[if ($category_info['seo_title']) {
+			$this->document->setTitle($category_info['seo_title']);
+		} else {
+			$this->document->setTitle($category_info['name']);
+		}]]></add>
+		</operation>		
+<operation>
+		 <search position="replace"><![CDATA[$this->data['heading_title'] = $category_info['name'];]]></search>
+		    <add trim="true"><![CDATA[if ($category_info['seo_h1']) {
+				$this->data['heading_title'] = $category_info['seo_h1'];
+		} else {
+			$this->data['heading_title'] = $category_info['name'];
+		}]]></add>
+		</operation>	
+		
+	</file>
+<!--H1 for homepage-->
+
+<file name="admin/view/template/setting/setting.tpl">
+<operation>
+		 <search position="before"><![CDATA[<td><span class="required">*</span> <?php echo $entry_title; ?></td>]]></search>
+		    <add trim="true"><![CDATA[<td>H1 главной страницы (for homepage)</td>
+              <td><input type="text" name="config_h1" value="<?php echo $config_h1; ?>" />
+               </td>
+            </tr>
+             <tr>
+              <td>Keywords</td>
+              <td><input type="text" name="config_keywords" value="<?php echo $config_keywords; ?>" />
+               </td>
+            </tr>
+            <tr>
+		    ]]></add>
+		</operation>		
+</file>
+
+<file name="admin/controller/setting/setting.php">
+<operation>
+		 <search position="before"><![CDATA[if (isset($this->request->post['config_title'])) {]]></search>
+		    <add trim="true"><![CDATA[if (isset($this->request->post['config_h1'])) {
+			$this->data['config_h1'] = $this->request->post['config_h1'];
+		} else {
+			$this->data['config_h1'] = $this->config->get('config_h1');
+		}
+		if (isset($this->request->post['config_keywords'])) {
+			$this->data['config_keywords'] = $this->request->post['config_keywords'];
+		} else {
+			$this->data['config_keywords'] = $this->config->get('config_keywords');
+		}]]></add>
+		</operation>		
+</file>
+
+<file name="catalog/controller/common/home.php">
+<operation>
+		 <search position="replace"><![CDATA[$this->data['heading_title'] = $this->config->get('config_title');]]></search>
+		    <add trim="true"><![CDATA[if ($this->config->get('config_keywords')) {
+			$this->document->setKeywords($this->config->get('config_keywords'));
+		
+		}
+		if ($this->config->get('config_h1')) {
+			$hhome = $this->config->get('config_h1');
+		} else {
+			$hhome = $this->config->get('config_title');
+		}
+		$this->data['heading_title'] = $hhome;]]></add>
+		</operation>		
+</file>
+
+
+
+<!--H1 for product-->
+
+<!--админка-->
+
+<!--Добавляем колонки в табл. БД-->
+<file name="admin/controller/catalog/product.php">
+		<operation>
+		    <search position="after"><![CDATA[
+		    	protected function getForm() {
+		    ]]></search>
+		    <add><![CDATA[
+			$query = $this->db->query("DESC ".DB_PREFIX."product_description seo_title");
+if (!$query->num_rows) {
+$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` ADD `seo_title` varchar(255) NOT NULL COMMENT '' COLLATE utf8_bin AFTER name;");
+$this->db->query("ALTER TABLE `" . DB_PREFIX . "product_description` ADD `seo_h1` varchar(255) NOT NULL COMMENT '' COLLATE utf8_bin AFTER seo_title;");
+
+}]]></add>
+		</operation>
+		
+	</file>
+	
+<!--model-->
+<file name="admin/model/catalog/product.php">
+		<operation>
+		    <search position="replace"><![CDATA[$this->db->escape($value['meta_description']) . "',]]></search>
+		    <add><![CDATA[$this->db->escape($value['meta_description']) . "', seo_title = '" . $this->db->escape($value['seo_title']) . "', seo_h1 = '" . $this->db->escape($value['seo_h1']) . "',]]></add>
+		</operation>
+	
+		<operation>
+		    <search position="after"><![CDATA[$product_description_data[$result['language_id']] = array(]]></search>
+		    <add><![CDATA[
+			'seo_title' => $result['seo_title'],
+			'seo_h1' => $result['seo_h1'],
+		    ]]></add>
+		</operation>		
+	</file>
+<!--добавление в форму-->
+<file path="admin/view/template/catalog/" name="product_form.tpl,product_enhanced_form.tpl">
+		<operation>
+		    <search position="before"><![CDATA[<td><?php echo $entry_meta_description; ?></td>]]></search>
+		    <add><![CDATA[
+			 <td>SEO H1</td>
+                <td><input type="text" name="product_description[<?php echo $language['language_id']; ?>][seo_h1]" maxlength="255" size="100" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['seo_h1'] : ''; ?>" /></td>
+              </tr>
+              <tr>
+                <td>SEO TITLE</td>
+                <td><input type="text" name="product_description[<?php echo $language['language_id']; ?>][seo_title]" maxlength="255" size="100" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['seo_title'] : ''; ?>" /></td>
+              </tr>
+			  <tr>
+		    ]]></add>
+		</operation>
+	</file>
+
+<!--сайт. если не заполнены h1 и title - вывод в этих тегах названия товара, если заполнен H1 - он будет выведен так же и в тайтл-->
+
+
+<!--контроллер-->
+
+	<file name="/catalog/controller/product/product.php">
+	
+
+		<operation>
+		 <search position="replace"><![CDATA[$this->document->setTitle($product_info['name']);]]></search>
+		    <add trim="true"><![CDATA[if ($product_info['seo_title']) {
+			$this->document->setTitle($product_info['seo_title']);
+		} 
+else if ($product_info['seo_h1']) {
+			$this->document->setTitle($product_info['seo_h1']);
+		}
+		else {
+			$this->document->setTitle($product_info['name']);
+		}]]></add>
+		</operation>		
+<operation>
+		 <search position="replace"><![CDATA[$this->data['heading_title'] = $product_info['name'];]]></search>
+		    <add trim="true"><![CDATA[if ($product_info['seo_h1']) {
+				$this->data['heading_title'] = $product_info['seo_h1'];
+		} else {
+			$this->data['heading_title'] = $product_info['name'];
+		}]]></add>
+		</operation>	
+		
+	</file>
+
+<!--модель-->
+
+<file name="/catalog/model/catalog/product.php">
+	
+
+		<operation>
+		    <search position="after"><![CDATA['meta_keyword'     => $query->row['meta_keyword'],]]></search>
+		    <add><![CDATA[
+		'seo_h1'     => $query->row['seo_h1'],
+				'seo_title'     => $query->row['seo_title'],
+		    ]]></add>
+		</operation>
+
+		
+	</file>
+
+</modification>
